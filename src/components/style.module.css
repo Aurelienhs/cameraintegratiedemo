@@ -1,0 +1,80 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+.header {
+  background: linear-gradient(#fe623d, #ff3472);
+  height: 50px;
+  font-size: 2em;
+  color: white;
+  padding: 20px;
+}
+.opencamerabutton {
+  border: none;
+  height: 25px;
+  background: linear-gradient(#fe623d, #ff3472);
+  font-size: 1.2em;
+  color: white;
+  margin-bottom: 1em;
+  border-radius: 10px;
+  padding: 0.4em;
+  padding-bottom: 1.2em;
+}
+.recordbutton {
+  border: none;
+  padding: 0;
+  background-color: transparent;
+  position: absolute;
+  bottom: -14em;
+}
+.logo {
+  width: 50p;
+  height: 50px;
+  float: left;
+}
+
+.videocontrols {
+  margin-bottom: 20px;
+}
+.videoplayer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.videoplayer,
+.recordedplayer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 200px;
+  width: 400px;
+  margin: auto;
+}
+.liveplayer {
+  height: 400px;
+  width: 800px;
+  margin-bottom: 30px;
+}
+.recordedplayer video {
+  height: 400px;
+  width: 800px;
+  margin-bottom: 1em;
+}
+.countdown {
+  position: absolute;
+  top: 6em;
+  left: 4em;
+  color: white;
+  font-size: 2em;
+}
+.stopwatch {
+  position: absolute;
+  top: 9em;
+  left: 4.8em;
+  color: white;
+  font-size: 2em;
+}
+
+.dashboard {
+}
