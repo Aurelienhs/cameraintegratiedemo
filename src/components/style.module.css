@@ -83,3 +83,10 @@ body {
   color: white;
   font-size: 2em;
 }
+.timer {
+  position: absolute;
+  top: 8.9em;
+  left: 6.4em;
+  color: white;
+  font-size: 2em;
+}

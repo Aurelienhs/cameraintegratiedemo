@@ -1,11 +1,11 @@
 import { useRef, useState } from "react"; // import useCallback
 import styles from "./style.module.css";
-import play from "./play.png";
-import stop from "./stop.png";
-import pause from "./pause.png";
+import playIcon from "./playIcon.png";
+import stopIcon from "./stopIcon.png";
+import pauseIcon from "./pauseIcon.png";
 import Countdown from "react-countdown";
-import Stopwatch from "./Stopwatch";
 import Fileuploader from "./Fileuploader";
+import { useTimer } from "./Timer";
 
 const Main = () => {
   const [permission, setPermission] = useState(false);
@@ -15,6 +15,8 @@ const Main = () => {
   const [stream, setStream] = useState(null);
   const [videoChunks, setVideoChunks] = useState([]);
   const [recordedVideo, setRecordedVideo] = useState(null);
+
+  const { seconds, start, pause, reset, running, stop } = useTimer();
 
   const getCameraPermission = async () => {
     setRecordedVideo(null);
@@ -60,6 +62,7 @@ const Main = () => {
     } else {
       mediaRecorder.current.start();
     }
+    start();
     let localVideoChunks = [];
     mediaRecorder.current.ondataavailable = (event) => {
       if (typeof event.data === "undefined") return;
@@ -71,6 +74,7 @@ const Main = () => {
   const pauseRecording = async () => {
     setRecordingStatus("inactive");
     mediaRecorder.current.pause();
+    pause();
   };
 
   const stopRecording = () => {
@@ -110,42 +114,49 @@ const Main = () => {
             ></video>
           ) : null}
           {permission && recordingStatus === "inactive" ? (
-            <button
-              onClick={() => setRecordingStatus("preparing")}
-              type="button"
-              className={styles.recordbutton}
-            >
-              <img
-                height="30em"
-                position="absolute"
-                src={play}
-                alt="startRecording"
-              ></img>
-            </button>
+            <div>
+              {seconds != 0 ? <p className={styles.timer}>{seconds}</p> : null}
+              <button
+                onClick={() => setRecordingStatus("preparing")}
+                type="button"
+                className={styles.recordbutton}
+              >
+                <img
+                  height="30em"
+                  position="absolute"
+                  src={playIcon}
+                  alt="startRecording"
+                ></img>
+              </button>
+            </div>
           ) : null}
           {recordingStatus === "preparing" ? (
-            <Countdown
-              onComplete={startRecording}
-              className={styles.countdown}
-              date={Date.now() + 3000}
-            ></Countdown>
+            <div>
+              {seconds != 0 ? <p className={styles.timer}>{seconds}</p> : null}
+
+              <Countdown
+                onComplete={startRecording}
+                className={styles.countdown}
+                date={Date.now() + 3000}
+              ></Countdown>
+            </div>
           ) : null}
           {recordingStatus === "recording" ? (
             <div>
-              <Stopwatch />
+              <p className={styles.timer}>{seconds}</p>
               <button
                 className={styles.pausebutton}
                 onClick={pauseRecording}
                 type="button"
               >
-                <img height="30em" src={pause} alt="pauseRecording"></img>
+                <img height="30em" src={pauseIcon} alt="pauseRecording"></img>
               </button>
               <button
                 className={styles.recordbutton}
                 onClick={stopRecording}
                 type="button"
               >
-                <img height="30em" src={stop} alt="stopRecording"></img>
+                <img height="30em" src={stopIcon} alt="stopRecording"></img>
               </button>
             </div>
           ) : null}
