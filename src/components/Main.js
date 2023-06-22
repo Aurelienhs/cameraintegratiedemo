@@ -2,6 +2,7 @@ import { useRef, useState } from "react"; // import useCallback
 import styles from "./style.module.css";
 import play from "./play.png";
 import stop from "./stop.png";
+import pause from "./pause.png";
 import Countdown from "react-countdown";
 import Stopwatch from "./Stopwatch";
 import Fileuploader from "./Fileuploader";
@@ -50,9 +51,15 @@ const Main = () => {
   const mimeType = "video/webm";
   const startRecording = async () => {
     setRecordingStatus("recording");
-    const media = new MediaRecorder(stream, { mimeType });
-    mediaRecorder.current = media;
-    mediaRecorder.current.start();
+    if (!mediaRecorder.current) {
+      const media = new MediaRecorder(stream, { mimeType });
+      mediaRecorder.current = media;
+    }
+    if (mediaRecorder.current.state === "paused") {
+      mediaRecorder.current.resume();
+    } else {
+      mediaRecorder.current.start();
+    }
     let localVideoChunks = [];
     mediaRecorder.current.ondataavailable = (event) => {
       if (typeof event.data === "undefined") return;
@@ -60,6 +67,10 @@ const Main = () => {
       localVideoChunks.push(event.data);
     };
     setVideoChunks(localVideoChunks);
+  };
+  const pauseRecording = async () => {
+    setRecordingStatus("inactive");
+    mediaRecorder.current.pause();
   };
 
   const stopRecording = () => {
@@ -122,6 +133,13 @@ const Main = () => {
           {recordingStatus === "recording" ? (
             <div>
               <Stopwatch />
+              <button
+                className={styles.pausebutton}
+                onClick={pauseRecording}
+                type="button"
+              >
+                <img height="30em" src={pause} alt="pauseRecording"></img>
+              </button>
               <button
                 className={styles.recordbutton}
                 onClick={stopRecording}

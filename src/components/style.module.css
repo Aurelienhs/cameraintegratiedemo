@@ -27,6 +27,14 @@ body {
   position: absolute;
   bottom: -14em;
 }
+.pausebutton {
+  border: none;
+  padding: 0;
+  background-color: transparent;
+  position: absolute;
+  bottom: -14em;
+  left: 11.5em;
+}
 .logo {
   width: 50p;
   height: 50px;
@@ -74,7 +82,4 @@ body {
   left: 4.8em;
   color: white;
   font-size: 2em;
-}
-
-.dashboard {
 }
