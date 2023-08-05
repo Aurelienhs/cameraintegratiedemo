@@ -1,11 +1,13 @@
-import { useRef, useState } from "react"; // import useCallback
+import React from "react";
+import { useRef, useState } from "react";
 import styles from "./style.module.css";
+//Iconen voor knoppen
 import playIcon from "./playIcon.png";
 import stopIcon from "./stopIcon.png";
 import pauseIcon from "./pauseIcon.png";
 import Countdown from "react-countdown";
-import Fileuploader from "./Fileuploader";
 import { useTimer } from "./Timer";
+import Fileuploader from "./Fileuploader";
 
 const Main = () => {
   const [permission, setPermission] = useState(false);
@@ -22,24 +24,34 @@ const Main = () => {
     setRecordedVideo(null);
     if ("MediaRecorder" in window) {
       try {
+        const constraints = {
+          audio: true,
+          video: true,
+        };
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
         const videoConstraints = {
           audio: false,
           video: true,
         };
-        const audioConstraints = { audio: true };
+
+        const audioConstraints = {
+          audio: true,
+        };
         // create audio and video streams separately
-        const audioStream = await navigator.mediaDevices.getUserMedia(
-          audioConstraints
-        );
         const videoStream = await navigator.mediaDevices.getUserMedia(
           videoConstraints
         );
+        const audioStream = await navigator.mediaDevices.getUserMedia(
+          audioConstraints
+        );
+
         setPermission(true);
         //combine both audio and video streams
         const combinedStream = new MediaStream([
-          ...videoStream.getVideoTracks(),
-          ...audioStream.getAudioTracks(),
+          ...audioStream.getTracks(),
+          ...videoStream.getTracks(),
         ]);
+
         setStream(combinedStream);
         //set videostream to live feed player
         liveVideoFeed.current.srcObject = videoStream;
@@ -71,6 +83,7 @@ const Main = () => {
     };
     setVideoChunks(localVideoChunks);
   };
+
   const pauseRecording = async () => {
     setRecordingStatus("inactive");
     mediaRecorder.current.pause();
@@ -78,6 +91,7 @@ const Main = () => {
   };
 
   const stopRecording = () => {
+    stop();
     setPermission(false);
     setRecordingStatus("inactive");
     mediaRecorder.current.stop();
@@ -115,7 +129,7 @@ const Main = () => {
           ) : null}
           {permission && recordingStatus === "inactive" ? (
             <div>
-              {seconds != 0 ? <p className={styles.timer}>{seconds}</p> : null}
+              {seconds !== 0 ? <p className={styles.timer}>{seconds}</p> : null}
               <button
                 onClick={() => setRecordingStatus("preparing")}
                 type="button"
@@ -132,7 +146,7 @@ const Main = () => {
           ) : null}
           {recordingStatus === "preparing" ? (
             <div>
-              {seconds != 0 ? <p className={styles.timer}>{seconds}</p> : null}
+              {seconds !== 0 ? <p className={styles.timer}>{seconds}</p> : null}
 
               <Countdown
                 onComplete={startRecording}
