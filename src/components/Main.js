@@ -18,19 +18,14 @@ const Main = () => {
   const [videoChunks, setVideoChunks] = useState([]);
   const [recordedVideo, setRecordedVideo] = useState(null);
 
-  const { seconds, start, pause, reset, running, stop } = useTimer();
+  const { seconds, start, pause, stop } = useTimer();
 
   const getCameraPermission = async () => {
     setRecordedVideo(null);
     if ("MediaRecorder" in window) {
       try {
-        const constraints = {
-          audio: true,
-          video: true,
-        };
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
         const videoConstraints = {
-          audio: false,
+          audio: true,
           video: true,
         };
 
@@ -124,6 +119,7 @@ const Main = () => {
             <video
               ref={liveVideoFeed}
               autoPlay
+              muted
               className={styles.liveplayer}
             ></video>
           ) : null}
